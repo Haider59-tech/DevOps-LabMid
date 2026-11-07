@@ -1,23 +1,187 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Assignment Submission Portal Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Submission Portal</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .container { max-width: 500px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        input { display: block; width: 90%; margin-bottom: 10px; padding: 8px; }
-        button { padding: 10px 15px; background: #007bff; color: white; border: none; cursor: pointer; }
+        :root {
+            --primary: #0366d6;
+            --background: #f6f8fa;
+            --text: #24292e;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #e1e4e8;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 30px;
+        }
+        h2 { 
+            margin-top: 0; 
+            color: var(--text); 
+            text-align: center;
+            font-size: 24px;
+        }
+        .demo-badge {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            background: #e1e4e8;
+            padding: 4px 8px;
+            border-radius: 12px;
+            width: max-content;
+            margin: 0 auto 20px auto;
+            color: #586069;
+        }
+        .form-group { margin-bottom: 15px; }
+        label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 6px; 
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: #fafbfc;
+            font-size: 14px;
+        }
+        input:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.3);
+            background-color: white;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2ea44f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        button:hover { background: #2c974b; }
+        .error { 
+            color: #d73a49; 
+            font-size: 13px; 
+            display: none; 
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        #submission-list {
+            width: 100%;
+            max-width: 450px;
+        }
+        .submission-item {
+            background: white;
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            border-radius: 6px;
+            border-top: 1px solid #e1e4e8;
+            border-right: 1px solid #e1e4e8;
+            border-bottom: 1px solid #e1e4e8;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .submission-item h4 { margin: 0 0 8px 0; font-size: 16px; }
+        .submission-item p { margin: 4px 0; font-size: 14px; color: #586069; }
+        .submission-item a { color: var(--primary); text-decoration: none; word-break: break-all; }
+        .submission-item a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Submit Assignment (Static Demo)</h2>
-        <p>This is a static frontend demo for GitHub Pages.</p>
-        <input type="text" placeholder="Name" required>
-        <input type="text" placeholder="Registration Number" required>
-        <input type="text" placeholder="Assignment Title" required>
-        <input type="url" placeholder="Submission URL" required>
-        <button type="button" onclick="alert('Demo: Submission function disabled on static page.')">Submit</button>
+
+    <div class="card">
+        <h2>Submit Assignment</h2>
+        <span class="demo-badge">Frontend Demo</span>
+        <div id="error-msg" class="error"></div>
+        <form id="submit-form">
+            <div class="form-group">
+                <label>Student Name</label>
+                <input type="text" id="name" required placeholder="e.g., John Doe">
+            </div>
+            <div class="form-group">
+                <label>Registration Number</label>
+                <input type="text" id="regNo" required placeholder="e.g., FA20-BCS-001">
+            </div>
+            <div class="form-group">
+                <label>Assignment Title</label>
+                <input type="text" id="title" required placeholder="e.g., DevOps Lab Mid">
+            </div>
+            <div class="form-group">
+                <label>Submission URL</label>
+                <input type="url" id="url" required placeholder="https://github.com/...">
+            </div>
+            <button type="submit">Submit Assignment</button>
+        </form>
     </div>
+
+    <div id="submission-list">
+        <h3 style="display: none; text-align: center; color: var(--text);" id="list-title">Recent Submissions</h3>
+        <!-- Submitted records will appear here -->
+    </div>
+
+    <script>
+        document.getElementById('submit-form').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const name = document.getElementById('name').value.trim();
+            const regNo = document.getElementById('regNo').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const url = document.getElementById('url').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            
+            // Input Validation for URL
+            try {
+                new URL(url);
+                errorMsg.style.display = 'none';
+            } catch (_) {
+                errorMsg.innerText = "Please enter a valid URL (must include http:// or https://)";
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            // Show the list title and create a new submission card
+            document.getElementById('list-title').style.display = 'block';
+            const list = document.getElementById('submission-list');
+            const item = document.createElement('div');
+            item.className = 'submission-item';
+            
+            item.innerHTML = `
+                <h4>${title}</h4>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Reg No:</strong> ${regNo}</p>
+                <p><strong>URL:</strong> <a href="${url}" target="_blank">${url}</a></p>
+            `;
+            
+            // Add the new submission below the title
+            list.insertBefore(item, list.children[1]);
+            
+            // Reset the form fields
+            document.getElementById('submit-form').reset();
+        });
+    </script>
 </body>
 </html>
