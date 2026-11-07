@@ -36,3 +36,10 @@ jobs:
         run: |
           echo "Tests failed! Marking pipeline as failed."
           exit 1
+# BONUS 1: Conditional Deployment to GitHub Pages
+      - name: Deploy to GitHub Pages
+        if: success() # This ensures it ONLY deploys if tests pass
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
