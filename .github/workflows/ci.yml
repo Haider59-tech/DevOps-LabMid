@@ -29,7 +29,7 @@ jobs:
 
       - name: Send Report to Local Receiver
         env:
-          RECEIVER_URL: "https://crazy-comics-clean.loca.lt" # Make sure no trailing slash!
+          RECEIVER_URL: "https://late-hotels-ask.loca.lt" # Make sure no trailing slash!
         run: node send-report.js
 
       # This ensures the pipeline actually fails in GitHub if the tests failed, as required
