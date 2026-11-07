@@ -53,7 +53,10 @@ const report = {
 // Send it to the local receiver via the tunnel
 fetch(receiverUrl + '/report', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+        'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true' 
+    },
     body: JSON.stringify(report)
 }).then(res => {
     console.log("Report successfully sent to receiver! Status:", res.status);
