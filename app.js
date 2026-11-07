@@ -22,7 +22,7 @@ app.post('/submit', (req, res) => {
     // Save valid submission
     const submission = { name, regNo, title, url };
     submissions.push(submission);
-    res.status(201).json({ message: "Broken submission", submission });
+    res.status(201).json({ message: "Submission saved", submission });
 });
 
 app.get('/submissions', (req, res) => {
