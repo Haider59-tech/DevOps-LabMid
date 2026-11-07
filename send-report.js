@@ -63,3 +63,55 @@ fetch(receiverUrl + '/report', {
 }).catch(err => {
     console.error("Failed to send report:", err.message);
 });
+
+
+// BONUS: Send Email via Nodemailer
+const nodemailer = require('nodemailer');
+
+const emailUser = process.env.EMAIL_USERNAME;
+const emailPass = process.env.EMAIL_PASSWORD;
+const emailReceiver = process.env.TO_EMAIL;
+
+if (emailUser && emailPass && emailReceiver) {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: emailUser,
+            pass: emailPass
+        }
+    });
+
+    const mailOptions = {
+        from: emailUser,
+        to: emailReceiver,
+        subject: `CI Test Report: ${report.overallStatus} - ${report.repository}`,
+        text: `
+DevOps Lab Mid - CI Test Report
+---------------------------------
+Repository: ${report.repository}
+Branch: ${report.branch}
+Commit SHA: ${report.commitSha}
+Pipeline Run ID: ${report.pipelineRunId}
+Timestamp: ${report.timestamp}
+
+Overall Status: ${report.overallStatus}
+Total Tests: ${report.counts.total}
+Passed: ${report.counts.passed}
+Failed: ${report.counts.failed}
+
+Test Details:
+${report.tests.map(t => `- ${t.name}: ${t.result}${t.failureMessage ? '\n  Error: ' + t.failureMessage : ''}`).join('\n')}
+        `
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("Error sending email:", error);
+        } else {
+            console.log("Email sent successfully: " + info.response);
+        }
+    });
+} else {
+    console.log("Email credentials not found in environment, skipping email.");
+}
+

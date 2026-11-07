@@ -29,6 +29,9 @@ jobs:
         if: always()
         env:
           RECEIVER_URL: "https://happy-shrimps-shave.loca.lt"
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
         run: node send-report.js
 
       - name: Enforce Test Status
