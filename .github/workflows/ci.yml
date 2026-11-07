@@ -21,18 +21,15 @@ jobs:
         run: npm ci
 
       - name: Run automated tests
-        # We output the results to JSON so the sender script can read it
-        # The 'continue-on-error' ensures the pipeline proceeds to send the report even if a test fails
         run: npx jest --json --outputFile=results.json
         continue-on-error: true
         id: test_step
 
       - name: Send Report to Local Receiver
         env:
-          RECEIVER_URL: "https://late-hotels-ask.loca.lt" # Make sure no trailing slash!
+          RECEIVER_URL: "https://late-hotels-ask.loca.lt"
         run: node send-report.js
 
-      # This ensures the pipeline actually fails in GitHub if the tests failed, as required
       - name: Enforce Test Status
         if: steps.test_step.outcome == 'failure'
         run: |
