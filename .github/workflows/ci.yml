@@ -27,7 +27,7 @@ jobs:
 
       - name: Send Report to Local Receiver
         env:
-          RECEIVER_URL: "https://late-hotels-ask.loca.lt"
+          RECEIVER_URL: "https://early-candles-lay.loca.lt"
         run: node send-report.js
 
       - name: Enforce Test Status
