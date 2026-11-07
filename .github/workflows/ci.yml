@@ -28,7 +28,7 @@ jobs:
       - name: Send Report to Local Receiver
         if: always()
         env:
-          RECEIVER_URL: "https://twenty-comics-arrive.loca.lt"
+          RECEIVER_URL: "https://stupid-corners-draw.loca.lt"
         run: node send-report.js
 
       - name: Enforce Test Status
